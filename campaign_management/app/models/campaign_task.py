@@ -1,10 +1,7 @@
 from datetime import datetime
-
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey,Enum
 from sqlalchemy.orm import relationship
-
 from app.db.database import Base
-
 
 class CampaignTask(Base):
     __tablename__ = "campaign_tasks"
@@ -19,5 +16,6 @@ class CampaignTask(Base):
     created_at = Column(DateTime, nullable=False, default=datetime.now)
     
     campaign = relationship("Campaign", back_populates="tasks")
-
     assignee = relationship("User", back_populates="assigned_tasks")
+
+
