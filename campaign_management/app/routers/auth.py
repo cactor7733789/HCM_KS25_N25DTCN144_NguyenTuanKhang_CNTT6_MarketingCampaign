@@ -7,7 +7,7 @@ from app.core.security import hash_password
 from app.schemas.user import UserCreate, UserResponse
 from app.schemas.user import UserLogin, Token
 from app.core.security import verify_password, create_access_token
-from app.core.exceptions import http_exception_handler
+
 router = APIRouter(
     prefix="/auth",
     tags=["Authentication"]

@@ -9,6 +9,7 @@ from app.models.campaign_task import CampaignTask
 from app.routers.auth import router as router
 from app.routers.users import router as users_router
 from app.routers.campaign import router as campaign_rt
+from app.routers.campaign_task import router as campaign_task
 
 app = FastAPI(
     title="Marketing Campaign Management API",
@@ -18,6 +19,7 @@ app = FastAPI(
 app.include_router(router)
 app.include_router(users_router)
 app.include_router(campaign_rt)
+app.include_router(campaign_task)
 
 
 Base.metadata.create_all(bind=engine)

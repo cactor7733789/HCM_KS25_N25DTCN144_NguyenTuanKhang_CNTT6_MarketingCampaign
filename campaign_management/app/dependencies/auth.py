@@ -5,6 +5,7 @@ from app.db.database import get_db
 from app.models.user import User
 from app.core.security import decode_access_token
 bearer_scheme = HTTPBearer()
+
 def get_current_user(
       auth_info: HTTPAuthorizationCredentials = Depends(bearer_scheme),
       db: Session = Depends(get_db)
@@ -48,3 +49,4 @@ def require_admin(
             detail="Only Admin :3"
         )
     return current_user
+

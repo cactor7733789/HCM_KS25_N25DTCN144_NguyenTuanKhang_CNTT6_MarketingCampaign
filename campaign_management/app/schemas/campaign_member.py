@@ -7,7 +7,7 @@ class CampaignMemberBase(BaseModel):
     role: str = "MEMBER"
 
 class CampaignMemberCreate(CampaignMemberBase):
-    pass
+    user_id: int
 
 class CampaignMemberUpdate(BaseModel):
     role: str | None = None
