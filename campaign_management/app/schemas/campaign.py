@@ -15,7 +15,7 @@ class CampaignBase(BaseModel):
         return value
 
 class CampaignCreate(CampaignBase):
-    owner_id: int | None = None
+    pass
 
 class CampaignUpdate(BaseModel):
     name: str | None = None

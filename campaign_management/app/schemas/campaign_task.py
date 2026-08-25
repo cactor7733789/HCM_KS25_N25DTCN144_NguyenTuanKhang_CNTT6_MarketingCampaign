@@ -1,13 +1,17 @@
 from datetime import datetime
+from typing import Literal
 from pydantic import BaseModel, ConfigDict
+
+TaskStatus = Literal["TODO", "IN_PROGRESS", "DONE"]
+TaskPriority = Literal["LOW", "MEDIUM", "HIGH"]
 
 class CampaignTaskBase(BaseModel):
     campaign_id: int
     title: str
     description: str | None = None
     assignee_id: int | None = None
-    status: str = "TODO"
-    priority: str = "MEDIUM"
+    status: TaskStatus = "TODO"
+    priority: TaskPriority = "MEDIUM"
     due_date: datetime | None = None
 
 class CampaignTaskCreate(CampaignTaskBase):
@@ -17,8 +21,8 @@ class CampaignTaskUpdate(BaseModel):
     title: str | None = None
     description: str | None = None
     assignee_id: int | None = None
-    status: str | None = None
-    priority: str | None = None
+    status: TaskStatus | None = None
+    priority: TaskPriority | None = None
     due_date: datetime | None = None
 
 class CampaignTaskResponse(CampaignTaskBase):
@@ -26,3 +30,7 @@ class CampaignTaskResponse(CampaignTaskBase):
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+class TaskSort(BaseModel):
+    created_at: bool = False
+    due_date: bool = False

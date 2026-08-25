@@ -1,9 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from app.core.exceptions import http_exception_handler
 
 from app.db.database import engine, Base
 
 from app.models.user import User  
-from app.models.campaign import Campaign ,CampaignMember   
+from app.models.campaign import Campaign, CampaignMember   
 from app.models.campaign_task import CampaignTask
 
 from app.routers.auth import router as router
@@ -15,6 +16,8 @@ app = FastAPI(
     title="Marketing Campaign Management API",
     version="1.0.0"
 )
+
+app.add_exception_handler(HTTPException, http_exception_handler)
 
 app.include_router(router)
 app.include_router(users_router)

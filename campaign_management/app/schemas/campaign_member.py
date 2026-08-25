@@ -6,7 +6,7 @@ class CampaignMemberBase(BaseModel):
     user_id: int
     role: str = "MEMBER"
 
-class CampaignMemberCreate(CampaignMemberBase):
+class CampaignMemberCreate(BaseModel):
     user_id: int
 
 class CampaignMemberUpdate(BaseModel):
