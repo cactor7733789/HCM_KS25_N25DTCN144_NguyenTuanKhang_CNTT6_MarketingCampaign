@@ -31,13 +31,22 @@ def create_task_service(campaign_id: int,task_in: CampaignTaskCreate,current_use
         current_user.id
     )
 
-    if task_in.assignee_id is not None:
-        is_assignee_owner = campaign.owner_id == task_in.assignee_id
+    title = task_in.title.strip()
+    if not title:
+        raise HTTPException(
+            status_code=400,
+            detail="Tiêu đề task không được để trống"
+        )
+
+    assignee_id = task_in.assignee_id if (task_in.assignee_id and task_in.assignee_id > 0) else None
+
+    if assignee_id is not None:
+        is_assignee_owner = campaign.owner_id == assignee_id
         is_assignee_member = (
             db.query(CampaignMember)
             .filter(
                 CampaignMember.campaign_id == campaign_id,
-                CampaignMember.user_id == task_in.assignee_id
+                CampaignMember.user_id == assignee_id
             )
             .first()
             is not None
@@ -49,11 +58,11 @@ def create_task_service(campaign_id: int,task_in: CampaignTaskCreate,current_use
             )
 
     new_task = CampaignTask(
-        title=task_in.title,
+        title=title,
         description=task_in.description,
         due_date=task_in.due_date,
         priority=task_in.priority,
-        assignee_id=task_in.assignee_id,
+        assignee_id=assignee_id,
         campaign_id=campaign_id,
         status=task_in.status
     )
@@ -191,23 +200,26 @@ def update_task_service(campaign_id: int,task_id:int,task_data: CampaignTaskUpda
         check_task.description = task_data.description
 
     if task_data.assignee_id is not None:
-        is_assignee_owner = campaign.owner_id == task_data.assignee_id
-        is_assignee_member = (
-            db.query(CampaignMember)
-            .filter(
-                CampaignMember.campaign_id == campaign_id,
-                CampaignMember.user_id == task_data.assignee_id
-            ).first()
-            is not None
-        )
-
-        if not is_assignee_owner and not is_assignee_member:
-            raise HTTPException(
-                status_code=400,
-                detail="Assignee không phải là thành viên trong chiến dịch!"
+        if task_data.assignee_id <= 0:
+            check_task.assignee_id = None
+        else:
+            is_assignee_owner = campaign.owner_id == task_data.assignee_id
+            is_assignee_member = (
+                db.query(CampaignMember)
+                .filter(
+                    CampaignMember.campaign_id == campaign_id,
+                    CampaignMember.user_id == task_data.assignee_id
+                ).first()
+                is not None
             )
 
-        check_task.assignee_id = task_data.assignee_id
+            if not is_assignee_owner and not is_assignee_member:
+                raise HTTPException(
+                    status_code=400,
+                    detail="Assignee không phải là thành viên trong chiến dịch!"
+                )
+
+            check_task.assignee_id = task_data.assignee_id
 
     if task_data.status is not None:
         check_task.status = task_data.status

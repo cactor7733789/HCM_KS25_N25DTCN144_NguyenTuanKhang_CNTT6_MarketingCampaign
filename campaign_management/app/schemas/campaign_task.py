@@ -14,8 +14,13 @@ class CampaignTaskBase(BaseModel):
     priority: TaskPriority = "MEDIUM"
     due_date: datetime | None = None
 
-class CampaignTaskCreate(CampaignTaskBase):
-    pass
+class CampaignTaskCreate(BaseModel):
+    title: str
+    description: str | None = None
+    assignee_id: int | None = None
+    status: TaskStatus = "TODO"
+    priority: TaskPriority = "MEDIUM"
+    due_date: datetime | None = None
 
 class CampaignTaskUpdate(BaseModel):
     title: str | None = None
@@ -25,8 +30,15 @@ class CampaignTaskUpdate(BaseModel):
     priority: TaskPriority | None = None
     due_date: datetime | None = None
 
-class CampaignTaskResponse(CampaignTaskBase):
+class CampaignTaskResponse(BaseModel):
     id: int
+    campaign_id: int
+    title: str
+    description: str | None = None
+    assignee_id: int | None = None
+    status: TaskStatus
+    priority: TaskPriority
+    due_date: datetime | None = None
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)

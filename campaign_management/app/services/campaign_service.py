@@ -118,7 +118,7 @@ def delete_campaign_service(campaign_id: int,current_user: User,db: Session):
             status_code=404,
             detail="Campaign không tồn tại"
         )
-    if not campaign.owner_id == current_user.id:
+    if campaign.owner_id != current_user.id:
         raise HTTPException(
             status_code=403,
             detail="Không có quyền xoá"
@@ -218,7 +218,7 @@ def get_member_service(campaign_id: int,current_user: User,db: Session):
     if not campaign:
         raise HTTPException(
             status_code=404,
-            detail="Không tìm thấy CamPaign"
+            detail="Không tìm thấy campaign"
         )
     check_exist = db.query(CampaignMember).filter(
         CampaignMember.campaign_id == campaign_id,
