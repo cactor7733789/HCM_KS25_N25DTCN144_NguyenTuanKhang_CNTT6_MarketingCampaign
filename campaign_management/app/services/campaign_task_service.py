@@ -110,19 +110,30 @@ def get_all_task_service(campaign_id: int,current_user: User,db: Session,limit: 
             CampaignTask.assignee_id == assignee_id
         )
 
+    order = sort_order.lower() if sort_order else "asc"
+
     if sort_by == "due_date":
-        if sort_order == "desc":
+        if order == "desc":
             query = query.order_by(CampaignTask.due_date.desc())
         else:
             query = query.order_by(CampaignTask.due_date.asc())
-
     elif sort_by == "created_at":
-        if sort_order == "desc":
+        if order == "desc":
             query = query.order_by(CampaignTask.created_at.desc())
         else:
             query = query.order_by(CampaignTask.created_at.asc())
+    else:
+        query = query.order_by(CampaignTask.created_at.desc())
 
-    return query.offset(offset).limit(limit).all()
+    tasks = query.offset(offset).limit(limit).all()
+    current_page = (offset // limit) + 1
+
+    return {
+        "page": current_page,
+        "limit": limit,
+        "offset": offset,
+        "data": tasks
+    }
     
 def get_single_task_service(task_id: int,campaign_id: int,current_user: User,db: Session):
     campaign = check_campaign_membership(db,campaign_id,current_user.id)

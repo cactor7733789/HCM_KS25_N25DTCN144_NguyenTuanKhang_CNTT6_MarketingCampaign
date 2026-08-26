@@ -2,7 +2,13 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.models import User
-from app.schemas.campaign_task import CampaignTaskCreate, CampaignTaskResponse, CampaignTaskUpdate, TaskPriority, TaskStatus
+from app.schemas.campaign_task import (
+    CampaignTaskCreate,
+    CampaignTaskResponse,
+    CampaignTaskUpdate,
+    TaskPriority,
+    TaskStatus
+)
 from app.dependencies.auth import get_current_user
 from app.services.campaign_task_service import (
     create_task_service,
@@ -35,7 +41,6 @@ def create_task(
 
 @router.get(
     "/{campaign_id}",
-    response_model=list[CampaignTaskResponse],
     status_code=status.HTTP_200_OK,
     summary="Danh sách đầu việc chiến dịch (Filter & Phân trang)",
     description="Lấy danh sách task của chiến dịch. Hỗ trợ tìm kiếm theo tiêu đề, lọc theo status/priority/assignee, phân trang limit/offset và sắp xếp theo due_date/created_at."
